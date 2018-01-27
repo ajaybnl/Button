@@ -4,6 +4,16 @@
 || @author 		     Alexander Brevig              <alexanderbrevig@gmail.com>        
 || @url            http://alexanderbrevig.com
 ||
+||
+|| @contribution
+|| | Change by ajay kumar (ajaybnl@gmail.com)
+|| #
+||
+|| @description
+|| | Corrected Some Functions to use easily. Also Added Their Use in Examples
+|| #
+||
+||
 || @description
 || | This is a Hardware Abstraction Library for Buttons
 || | It providea an easy way of handling buttons
@@ -48,8 +58,12 @@ class Button {
     void holdHandler(buttonEventHandler handler, unsigned int holdTime=0);
   
     unsigned int holdTime() const;
-    inline unsigned int presses() const { return numberOfPresses; }
-    
+    inline unsigned int presses() { 
+	unsigned int n=numberOfPresses;
+	if(numberOfPresses>0){if ((millis()-pressedStartTime1) > 400){ numberOfPresses=0; pressedStartTime1=0;}}
+	return n;
+	}
+    unsigned long pressedStartTime1=0;
     bool operator==(Button &rhs);
     
   private: 

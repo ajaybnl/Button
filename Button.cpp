@@ -4,6 +4,16 @@
 || @author 		     Alexander Brevig              <alexanderbrevig@gmail.com>        
 || @url            http://alexanderbrevig.com
 ||
+||
+|| @contribution
+|| | Change by ajay kumar (ajaybnl@gmail.com)
+|| #
+||
+|| @description
+|| | Corrected Some Functions to use easily. Also Added Their Use in Examples
+|| #
+||
+||
 || @description
 || | This is a Hardware Abstraction Library for Buttons
 || | It provides an easy way of handling buttons
@@ -79,6 +89,7 @@ void Button::pulldown(void)
 */
 bool Button::isPressed(void)
 {  
+
   //save the previous value
   bitWrite(state,PREVIOUS,bitRead(state,CURRENT));
   
@@ -90,7 +101,8 @@ bool Button::isPressed(void)
   } 
   else 
   {
-    //currently the button is pressed
+    
+	//currently the button is pressed
     bitWrite(state,CURRENT,true);
   }
   
@@ -100,10 +112,15 @@ bool Button::isPressed(void)
     //the state changed to PRESSED
     if (bitRead(state,CURRENT) == true) 
     {
+	pressedStartTime1=millis();	
+	
       numberOfPresses++;
       if (cb_onPress) { cb_onPress(*this); }   //fire the onPress event
       pressedStartTime = millis();             //start timing
       triggeredHoldEvent = false;
+	  if(pressedStartTime1>0){
+  
+}
     } 
     else //the state changed to RELEASED
     {
@@ -132,6 +149,9 @@ bool Button::isPressed(void)
       }
     }
   }
+  
+  if(numberOfPresses>0){if ((millis()-pressedStartTime1) > 400){ numberOfPresses=0; pressedStartTime1=0;}}
+  
 	return bitRead(state,CURRENT);
 }
 
@@ -268,7 +288,7 @@ void Button::holdHandler(buttonEventHandler handler, unsigned int holdTime /*=0*
 ||
 || @return The time this button has been held
 */
-unsigned int Button::holdTime() const { if (pressedStartTime!=-1) { return millis()-pressedStartTime; } else return 0; }
+unsigned int Button::holdTime() const {if (pressedStartTime!=-1) { return millis()-pressedStartTime; } else return 0; }
 
 /*
 || @description
